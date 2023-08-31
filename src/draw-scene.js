@@ -1,4 +1,6 @@
 function drawScene(gl, programInfo, buffers, texture, cubeRotation) {
+  resizeCanvasToDisplaySize(gl.canvas)
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
   gl.clearColor(0.0, 0.0, 0.0, 1.0) // Clear to black, fully opaque
   gl.clearDepth(1.0) // Clear everything
   gl.enable(gl.DEPTH_TEST) // Enable depth testing
@@ -37,7 +39,7 @@ function drawScene(gl, programInfo, buffers, texture, cubeRotation) {
     [-0.0, 0.0, -6.0]
   ) // amount to translate
 
-  mat4.rotate(
+  let t = mat4.rotate(
     modelViewMatrix, // destination matrix
     modelViewMatrix, // matrix to rotate
     cubeRotation, // amount to rotate in radians
@@ -186,6 +188,24 @@ function setNormalAttribute(gl, buffers, programInfo) {
     offset
   )
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexNormal)
+}
+
+function resizeCanvasToDisplaySize(canvas) {
+  // Lookup the size the browser is displaying the canvas in CSS pixels.
+  const displayWidth  = canvas.clientWidth
+  const displayHeight = canvas.clientHeight
+ 
+  // Check if the canvas is not the same size.
+  const needResize = canvas.width  !== displayWidth ||
+                     canvas.height !== displayHeight
+ 
+  if (needResize) {
+    // Make the canvas the same size
+    canvas.width  = displayWidth
+    canvas.height = displayHeight
+  }
+ 
+  return needResize
 }
 
 export { drawScene }
